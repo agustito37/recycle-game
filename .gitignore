@@ -1,0 +1,47 @@
+# Godot 4+ specific ignores
+.godot/
+*.tmp
+
+# Godot-specific ignores
+.import/
+export.cfg
+export_presets.cfg
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# Mono-specific ignores
+.mono/
+data_*/
+mono_crash.*.json
+
+# System/IDE-specific ignores
+.DS_Store
+*~
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Builds
+build/
+builds/
+export/
+exports/
+*.exe
+*.pck
+*.zip
+*.apk
+*.aab
+*.ipa
+*.app
+*.dmg
+*.deb
+*.rpm
+
+# Debug
+*.log
+
+# Temporary files
+tmp/
+temp/
