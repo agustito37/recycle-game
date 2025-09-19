@@ -1090,7 +1090,7 @@ states/Start/position = Vector2(197, 108.543945)
 transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_uh32x"), "Idle", "Run", SubResource("AnimationNodeStateMachineTransition_ovj4f"), "Run", "Idle", SubResource("AnimationNodeStateMachineTransition_smiqs")]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ncbae"]
-size = Vector2(32, 27)
+size = Vector2(32, 30)
 
 [node name="PlayerRecycler" type="CharacterBody2D"]
 script = ExtResource("1_wn83q")
@@ -1113,5 +1113,5 @@ parameters/Idle/blend_position = Vector2(0, 1)
 parameters/Run/blend_position = Vector2(0.017543912, -0.5786555)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-1, 32.5)
+position = Vector2(-1, 28)
 shape = SubResource("RectangleShape2D_ncbae")
