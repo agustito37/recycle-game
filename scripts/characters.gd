@@ -1,84 +1,84 @@
 extends CharacterBody2D
 
-@export var move_speed : float = 100
-@export var starting_direction : Vector2 = Vector2(0, 1)
-@export var pickup_range : float = 70.0
+@onready var movement_component: MovementComponent = $MovementComponent
+@onready var animation_component: AnimationComponent = $AnimationComponent
+@onready var item_carrier_component: ItemCarrierComponent = $ItemCarrierComponent
 
-@onready var animation_tree = $AnimationTree
-@onready var state_machine = animation_tree.get("parameters/playback")
+var nearby_pickables: Array = []
+var nearby_receivers: Array = []
 
-var carried_item = null
-var current_direction = Vector2(0, 1)
 
 func _ready():
-	current_direction = starting_direction
-	update_animation_parameters(starting_direction)
+	add_to_group("player")
+	_setup_components()
 
-func _physics_process(_delta):
-	var input_direction = Vector2(
-		Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left"),
-		Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
-	)
+func _setup_components():
+	# Wait for components to be ready
+	await get_tree().process_frame
 
-	if input_direction.length() > 0:
-		input_direction = input_direction.normalized()
-		current_direction = input_direction
+	# Setup animation component with movement component
+	if animation_component and movement_component:
+		movement_component.direction_changed.connect(_on_direction_changed)
+		movement_component.movement_state_changed.connect(_on_movement_state_changed)
 
-	update_animation_parameters(input_direction)
+func _on_direction_changed(direction: Vector2):
+	if animation_component:
+		animation_component.set_parameter("Idle/blend_position", direction)
+		animation_component.set_parameter("Run/blend_position", direction)
 
-	handle_pickup_input()
-
-	velocity = input_direction * move_speed
-
-	move_and_slide()
-
-	pick_new_state()
-
-	update_carried_item()
-
-func update_animation_parameters(move_input  : Vector2):
-	if(move_input != Vector2.ZERO):
-		animation_tree.set("parameters/Run/blend_position", move_input)
-		animation_tree.set("parameters/Idle/blend_position", move_input)
-
-func pick_new_state():
-	if(velocity != Vector2.ZERO):
-		state_machine.travel("Run")
-	else:
-		state_machine.travel("Idle")
-
-func handle_pickup_input():
-	if Input.is_action_just_pressed("ui_accept"):
-		if carried_item == null:
-			try_pickup_item()
+func _on_movement_state_changed(is_moving: bool, direction: Vector2):
+	if animation_component:
+		if is_moving:
+			animation_component.play("Run")
 		else:
-			release_item()
+			animation_component.play("Idle")
 
-func try_pickup_item():
-	var item = find_nearby_pickupable()
-	if item and item.is_free():
-		# Calcular dirección del player hacia el item para posicionamiento
-		var direction_to_item = (item.global_position - global_position).normalized()
-		current_direction = direction_to_item
-		carried_item = item
-		item.be_picked_up(self)
+		animation_component.set_parameter("Idle/blend_position", direction)
+		animation_component.set_parameter("Run/blend_position", direction)
 
-func release_item():
-	if carried_item:
-		carried_item.be_released()
-		carried_item = null
+# Compatibility methods - direct delegation to components
+func get_current_direction() -> Vector2:
+	if movement_component:
+		return movement_component.get_current_direction()
+	return Vector2(0, 1)
 
-func find_nearby_pickupable():
-	var pickupables = get_tree().get_nodes_in_group("pickupables")
-	for item in pickupables:
-		var distance = global_position.distance_to(item.global_position)
-		if distance <= pickup_range:
-			return item
+func get_carried_item():
+	if item_carrier_component:
+		return item_carrier_component.get_carried_item()
 	return null
 
-func update_carried_item():
-	if carried_item:
-		var offset = current_direction * 30
-		var target_position = global_position + offset
-		carried_item.global_position = target_position
-  
+func _physics_process(_delta):
+	_update_interactions()
+
+func _update_interactions():
+	# Use the existing InteractionManager system but control it from character
+	var has_item = item_carrier_component.has_item()
+
+	# Find nearby receivers and pickables using InteractionManager's current areas
+	var active_receivers = []
+	var active_pickables = []
+
+	for area in InteractionManager.active_areas:
+		var parent = area.get_parent()
+		if parent.has_node("ItemReceiverComponent"):
+			active_receivers.append(area)
+		elif parent.is_in_group("pickupables"):
+			active_pickables.append(area)
+
+	# Clear all current areas
+	InteractionManager.active_areas.clear()
+
+	# Apply simple conditions
+	# Condition 1: Have item + receiver nearby → cook
+	if has_item and active_receivers.size() > 0:
+		InteractionManager.active_areas.append(active_receivers[0])
+
+	# Condition 2: No item + pickable nearby → pick up
+	elif not has_item and active_pickables.size() > 0:
+		InteractionManager.active_areas.append(active_pickables[0])
+
+	# Condition 3: Have item + no receiver nearby → drop
+	elif has_item:
+		var carried_item = item_carrier_component.get_carried_item()
+		if carried_item and carried_item.has_node("InteractionArea"):
+			InteractionManager.active_areas.append(carried_item.get_node("InteractionArea"))

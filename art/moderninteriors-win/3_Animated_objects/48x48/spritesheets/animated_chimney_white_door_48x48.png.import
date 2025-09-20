@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c6cry6klar8fh"
-path="res://.godot/imported/Interiors_16x16.png-08f9f51648171e431925b897df6cfeee.ctex"
+uid="uid://c5evu42m7jk8k"
+path="res://.godot/imported/animated_chimney_white_door_48x48.png-27d76d32cd11df398938db91b40ed3a5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/moderninteriors-win/1_Interiors/16x16/Interiors_16x16.png"
-dest_files=["res://.godot/imported/Interiors_16x16.png-08f9f51648171e431925b897df6cfeee.ctex"]
+source_file="res://art/moderninteriors-win/3_Animated_objects/48x48/spritesheets/animated_chimney_white_door_48x48.png"
+dest_files=["res://.godot/imported/animated_chimney_white_door_48x48.png-27d76d32cd11df398938db91b40ed3a5.ctex"]
 
 [params]
 

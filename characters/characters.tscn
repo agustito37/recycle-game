@@ -1,7 +1,10 @@
-[gd_scene load_steps=129 format=3 uid="uid://ykcef4eijgsi"]
+[gd_scene load_steps=132 format=3 uid="uid://ykcef4eijgsi"]
 
 [ext_resource type="Texture2D" uid="uid://cscvxvrw3nwur" path="res://art/moderninteriors-win/2_Characters/Character_Generator/0_Premade_Characters/48x48/Premade_Character_48x48_01.png" id="1_qyqqv"]
 [ext_resource type="Script" uid="uid://dktufiqoilkgx" path="res://scripts/characters.gd" id="1_wn83q"]
+[ext_resource type="Script" uid="uid://ba5pwuocgkoih" path="res://scripts/components/movement_component.gd" id="2_movement"]
+[ext_resource type="Script" uid="uid://digt7sadsd2s0" path="res://scripts/components/animation_component.gd" id="3_animation"]
+[ext_resource type="Script" uid="uid://d2ojbfxkeddl3" path="res://scripts/components/item_carrier_component.gd" id="4_carrier"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wn83q"]
 atlas = ExtResource("1_qyqqv")
@@ -1093,6 +1096,7 @@ transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition
 size = Vector2(32, 30)
 
 [node name="PlayerRecycler" type="CharacterBody2D"]
+collision_layer = 2
 script = ExtResource("1_wn83q")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -1115,3 +1119,13 @@ parameters/Run/blend_position = Vector2(0.017543912, -0.5786555)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-1, 28)
 shape = SubResource("RectangleShape2D_ncbae")
+
+[node name="MovementComponent" type="Node" parent="."]
+script = ExtResource("2_movement")
+move_speed = 250.0
+
+[node name="AnimationComponent" type="Node" parent="."]
+script = ExtResource("3_animation")
+
+[node name="ItemCarrierComponent" type="Node" parent="."]
+script = ExtResource("4_carrier")

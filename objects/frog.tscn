@@ -1,13 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://ct627apqt7q51"]
+[gd_scene load_steps=7 format=3 uid="uid://ct627apqt7q51"]
 
 [ext_resource type="Texture2D" uid="uid://b6gjh5qpvalvm" path="res://art/moderninteriors-win/3_Animated_objects/48x48/spritesheets/animated_frog_idle_48x48.png" id="1_bavf7"]
-[ext_resource type="Script" uid="uid://bk7kl0ei7e2in" path="res://scripts/pickupable.gd" id="2_bavf7"]
+[ext_resource type="PackedScene" uid="uid://b4rvyq5e8pqmx" path="res://interaction/interaction_area/interaction_area.tscn" id="3_bavf7"]
+[ext_resource type="Script" uid="uid://d0co1si523mbp" path="res://scripts/components/pickupable_component.gd" id="4_pickupable"]
+[ext_resource type="Script" uid="uid://b6f2xo6nb7dqc" path="res://scripts/frog.gd" id="5_frog"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vnw7q"]
 size = Vector2(33, 27)
 
-[node name="Frog" type="StaticBody2D" groups=["pickupables"]]
-script = ExtResource("2_bavf7")
+[sub_resource type="CircleShape2D" id="CircleShape2D_1xqvm"]
+radius = 50.0
+
+[node name="Frog" type="StaticBody2D"]
+script = ExtResource("5_frog")
 
 [node name="AnimatedFrogIdle48x48" type="Sprite2D" parent="."]
 texture = ExtResource("1_bavf7")
@@ -16,3 +21,12 @@ hframes = 6
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_vnw7q")
 debug_color = Color(0, 0.60130155, 0.69442785, 0.41960785)
+
+[node name="InteractionArea" parent="." instance=ExtResource("3_bavf7")]
+action_name = "pick up"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+shape = SubResource("CircleShape2D_1xqvm")
+
+[node name="PickupableComponent" type="Node" parent="."]
+script = ExtResource("4_pickupable")

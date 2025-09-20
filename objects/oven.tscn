@@ -1,0 +1,162 @@
+[gd_scene load_steps=19 format=3 uid="uid://c41m6kihaojos"]
+
+[ext_resource type="Texture2D" uid="uid://c5evu42m7jk8k" path="res://art/moderninteriors-win/3_Animated_objects/48x48/spritesheets/animated_chimney_white_door_48x48.png" id="1_iggpt"]
+[ext_resource type="Script" uid="uid://blepb4b32o538" path="res://scripts/oven.gd" id="2_oven"]
+[ext_resource type="PackedScene" uid="uid://b4rvyq5e8pqmx" path="res://interaction/interaction_area/interaction_area.tscn" id="3_oven"]
+[ext_resource type="Script" uid="uid://digt7sadsd2s0" path="res://scripts/components/animation_component.gd" id="4_animation"]
+[ext_resource type="Script" uid="uid://drbu1nkuebu35" path="res://scripts/components/item_receiver_component.gd" id="5_receiver"]
+[ext_resource type="Script" uid="uid://jjoakm3e80o4" path="res://scripts/components/item_processor_component.gd" id="6_processor"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_collision"]
+size = Vector2(48, 48)
+
+[sub_resource type="Animation" id="Animation_iy2nq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_iggpt"]
+resource_name = "cooking"
+length = 0.45
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_4hk1m"]
+resource_name = "idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dv1j0"]
+_data = {
+&"RESET": SubResource("Animation_iy2nq"),
+&"cooking": SubResource("Animation_iggpt"),
+&"idle": SubResource("Animation_4hk1m")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_iggpt"]
+animation = &"cooking"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_4hk1m"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_iy2nq"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dv1j0"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_7twr4"]
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_dv1j0"]
+states/Start/position = Vector2(166.5, 98.75)
+states/cooking/node = SubResource("AnimationNodeAnimation_iggpt")
+states/cooking/position = Vector2(442, 100.75)
+states/idle/node = SubResource("AnimationNodeAnimation_4hk1m")
+states/idle/position = Vector2(291, 101.5)
+transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_iy2nq"), "idle", "cooking", SubResource("AnimationNodeStateMachineTransition_dv1j0"), "cooking", "idle", SubResource("AnimationNodeStateMachineTransition_7twr4")]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1gecm"]
+radius = 79.101204
+
+[node name="Oven" type="StaticBody2D"]
+script = ExtResource("2_oven")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_collision")
+
+[node name="AnimatedChimneyWhiteDoor48x48" type="Sprite2D" parent="."]
+texture = ExtResource("1_iggpt")
+hframes = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../AnimatedChimneyWhiteDoor48x48")
+libraries = {
+&"": SubResource("AnimationLibrary_dv1j0")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+root_node = NodePath("../AnimatedChimneyWhiteDoor48x48")
+tree_root = SubResource("AnimationNodeStateMachine_dv1j0")
+anim_player = NodePath("../AnimationPlayer")
+
+[node name="AnimationComponent" type="Node" parent="."]
+script = ExtResource("4_animation")
+
+[node name="ItemReceiverComponent" type="Node" parent="."]
+script = ExtResource("5_receiver")
+
+[node name="ItemProcessorComponent" type="Node" parent="."]
+script = ExtResource("6_processor")
+
+[node name="InteractionArea" parent="." instance=ExtResource("3_oven")]
+action_name = "cook"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+shape = SubResource("CircleShape2D_1gecm")
