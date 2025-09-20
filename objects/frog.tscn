@@ -7,7 +7,6 @@
 size = Vector2(33, 27)
 
 [node name="Frog" type="StaticBody2D" groups=["pickupables"]]
-z_index = 2
 script = ExtResource("2_bavf7")
 
 [node name="AnimatedFrogIdle48x48" type="Sprite2D" parent="."]

@@ -6104,11 +6104,11 @@ texture_region_size = Vector2i(48, 48)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_o8r0f"]
 texture = ExtResource("5_3n7cs")
-texture_region_size = Vector2i(48, 48)
+texture_region_size = Vector2i(48, 96)
 0:0/0 = 0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(24, 3, 24, 24, -21, 24, -21, 3)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-21, -27, 24, -27, 24, 45, -21, 45)
 1:0/0 = 0
-1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(24, 3, 24, 24, -24, 24, -24, 3)
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(24, -27, 24, 45, -24, 45, -24, -27)
 0:1/0 = 0
 0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(24, -24, 24, 21, -21, 21, -21, -24)
 1:1/0 = 0
@@ -6139,8 +6139,8 @@ tile_set = SubResource("TileSet_d65c1")
 
 [node name="Furniture" type="TileMapLayer" parent="."]
 y_sort_enabled = true
-position = Vector2(0, -2)
-tile_map_data = PackedByteArray("AAD5//z/BQAAAAAAAAD5//3/BQAAAAEAAAD6//z/BQABAAAAAAD6//3/BQABAAEAAAD7//z/BQABAAAAAAD7//3/BQABAAEAAAD8//z/BQABAAAAAAD8//3/BQABAAEAAAD9//z/BQABAAAAAAD9//3/BQABAAEAAAD+//z/BQABAAAAAAD+//3/BQABAAEAAAD///z/BQABAAAAAAD///3/BQABAAEAAAAAAPz/BQABAAAAAAAAAP3/BQABAAEAAAABAPz/BQABAAAAAAABAP3/BQABAAEAAAACAPz/BQABAAAAAAACAP3/BQABAAEAAAADAPz/BQABAAAAAAADAP3/BQABAAEAAAAEAPz/BQABAAAAAAAEAP3/BQABAAEAAAAFAPz/BQABAAAAAAAFAP3/BQABAAEAAAAGAPz/BQAAAAAAABAGAP3/BQAAAAEAABA=")
+position = Vector2(6, -19)
+tile_map_data = PackedByteArray("AAD6//z/BQABAAAAAAAGAPz/BQAAAAAAABD7//z/BQABAAAAAAD8//z/BQABAAAAAAD9//z/BQABAAAAAAD+//z/BQABAAAAAAD///z/BQABAAAAAAAAAPz/BQABAAAAAAABAPz/BQABAAAAAAACAPz/BQABAAAAAAADAPz/BQABAAAAAAAEAPz/BQABAAAAAAAFAPz/BQABAAAAAAD5//z/BQAAAAAAAAA=")
 tile_set = SubResource("TileSet_d65c1")
 
 [node name="Frog" parent="." instance=ExtResource("6_wtvao")]
