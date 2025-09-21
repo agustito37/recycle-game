@@ -4,7 +4,6 @@
 [ext_resource type="Script" uid="uid://blepb4b32o538" path="res://scripts/oven.gd" id="2_oven"]
 [ext_resource type="PackedScene" uid="uid://b4rvyq5e8pqmx" path="res://interaction/interaction_area/interaction_area.tscn" id="3_oven"]
 [ext_resource type="Script" uid="uid://digt7sadsd2s0" path="res://scripts/components/animation_component.gd" id="4_animation"]
-[ext_resource type="Script" path="res://scripts/components/item_receiver_component.gd" id="5_receiver"]
 [ext_resource type="Script" uid="uid://jjoakm3e80o4" path="res://scripts/components/item_processor_component.gd" id="6_processor"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_collision"]
@@ -148,9 +147,6 @@ anim_player = NodePath("../AnimationPlayer")
 
 [node name="AnimationComponent" type="Node" parent="."]
 script = ExtResource("4_animation")
-
-[node name="ItemReceiverComponent" type="Node" parent="."]
-script = ExtResource("5_receiver")
 
 [node name="ItemProcessorComponent" type="Node" parent="."]
 script = ExtResource("6_processor")
