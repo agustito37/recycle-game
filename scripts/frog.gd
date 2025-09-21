@@ -8,18 +8,11 @@ func _ready():
 
 	if interaction_area:
 		interaction_area.interact = Callable(self, "_on_interact")
-		interaction_area.action_name = "pick up"
+		_update_interaction_text()
 
 func _physics_process(_delta):
 	if pickupable_component.is_carried():
 		_update_carry_position()
-		# Update interaction text for carried state
-		if interaction_area:
-			interaction_area.action_name = "drop"
-	else:
-		# Update interaction text for free state
-		if interaction_area:
-			interaction_area.action_name = "pick up"
 
 func _on_interact():
 	var player = get_tree().get_first_node_in_group("player")
@@ -47,6 +40,9 @@ func _be_picked_up(player, carrier):
 	# Update position to follow player
 	_start_following_player(player)
 
+	# Update interaction text
+	_update_interaction_text()
+
 func _be_dropped(carrier):
 	# Re-enable physics and restore visual
 	collision_layer = 1
@@ -58,6 +54,9 @@ func _be_dropped(carrier):
 	# Update carrier and component state
 	carrier.clear_carried_item()
 	pickupable_component.be_released()
+
+	# Update interaction text
+	_update_interaction_text()
 
 func _start_following_player(player):
 	# Connect to movement to follow player
@@ -106,3 +105,12 @@ func _position_item_near_player(player):
 
 	# Fallback: place at player position if no free space found
 	global_position = player.global_position
+
+func _update_interaction_text():
+	if not interaction_area:
+		return
+
+	if pickupable_component.is_carried():
+		interaction_area.action_name = "drop"
+	else:
+		interaction_area.action_name = "pick up"

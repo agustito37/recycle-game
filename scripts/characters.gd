@@ -60,8 +60,13 @@ func _update_interactions():
 
 	for area in InteractionManager.active_areas:
 		var parent = area.get_parent()
-		if parent.has_node("ItemReceiverComponent"):
-			active_receivers.append(area)
+		if parent.has_node("ItemProcessorComponent"):
+			var processor = parent.get_node("ItemProcessorComponent")
+			# If processor is ready, treat as pickable, otherwise as receiver
+			if processor.is_ready():
+				active_pickables.append(area)
+			else:
+				active_receivers.append(area)
 		elif parent.is_in_group("pickupables"):
 			active_pickables.append(area)
 

@@ -1,8 +1,7 @@
 extends StaticBody2D
 
 @onready var animation_component: AnimationComponent = $AnimationComponent
-@onready var item_receiver_component: ItemReceiverComponent = $ItemReceiverComponent
-@onready var item_processor_component: ItemProcessorComponent = $ItemProcessorComponent
+@onready var processor: ItemProcessorComponent = $ItemProcessorComponent
 @onready var interaction_area: InteractionArea = $InteractionArea
 
 const COOKING_TIME = 5.0
@@ -14,8 +13,8 @@ func _ready():
 		interaction_area.interact = Callable(self, "_on_interact")
 		_update_interaction_text()
 
-	if item_processor_component:
-		item_processor_component.processing_finished.connect(_on_processing_finished)
+	if processor:
+		processor.processing_finished.connect(_on_processing_finished)
 
 func _on_interact():
 	var player = get_tree().get_first_node_in_group("player")
@@ -33,55 +32,91 @@ func _on_interact():
 		_receive_item(item)
 
 	# If we have finished item, give it to player
-	elif item_receiver_component.has_items() and not item_processor_component.is_processing:
+	elif processor.is_ready():
 		if not carrier.has_item():
-			var item = item_receiver_component.remove_item(item_receiver_component.get_items()[0])
-			carrier.set_carried_item(item)
+			var item = processor.remove_item()
+			if item:
+				carrier.set_carried_item(item)
 
-			# Set pickupable state if item has pickupable component
-			if item.has_node("PickupableComponent"):
-				var pickupable_comp = item.get_node("PickupableComponent")
-				pickupable_comp.be_picked_up(player)
+				# Re-enable item interactions after processing
+				if item.has_node("InteractionArea"):
+					var interaction_area = item.get_node("InteractionArea")
+					interaction_area.set_monitoring(true)
+					interaction_area.set_monitorable(true)
 
-			_update_interaction_text()
+				# Set pickupable state if item has pickupable component
+				if item.has_node("PickupableComponent"):
+					var pickupable_comp = item.get_node("PickupableComponent")
+					pickupable_comp.be_picked_up(player)
+
+				# Update interaction text for the item being picked up
+				if item.has_method("_update_interaction_text"):
+					item._update_interaction_text()
+
+				# Update oven interaction text after item removal
+				_update_interaction_text()
 
 func _can_accept_item(item) -> bool:
 	# Simplified check - if item exists and we have space and not processing
 	if not item:
 		return false
-	if not item_receiver_component.has_space():
+	if not processor.has_space():
 		return false
-	if item_processor_component.is_processing:
+	if processor.is_currently_processing():
 		return false
 	# Accept any pickupable item
 	return item.is_in_group("pickupables")
 
 func _receive_item(item):
-	# Position item at oven and disable physics
+	# Position item at oven fire level (lower and smaller) and disable physics
 	item.global_position = global_position
+	item.global_position.y += 20  # Position lower in the fire area
 	if "collision_layer" in item:
 		item.collision_layer = 0
+
+	# Make item smaller during cooking
+	if "scale" in item:
+		item.scale = Vector2(0.7, 0.7)  # 70% of original size
 
 	# Release pickupable state if item has pickupable component
 	if item.has_node("PickupableComponent"):
 		var pickupable_comp = item.get_node("PickupableComponent")
 		pickupable_comp.be_released()
 
+	# Disable item interactions during processing
+	if item.has_node("InteractionArea"):
+		var interaction_area = item.get_node("InteractionArea")
+		interaction_area.set_monitoring(false)
+		interaction_area.set_monitorable(false)
+
 	# Store item and start cooking
-	item_receiver_component.add_item(item)
-	item_processor_component.start_processing(COOKING_TIME)
+	processor.add_item_and_start_processing(item, COOKING_TIME)
 	animation_component.play("cooking")
-	_update_interaction_text()
+
+	# Disable oven interactions during processing
+	if interaction_area:
+		interaction_area.set_monitoring(false)
+		interaction_area.set_monitorable(false)
 
 func _on_processing_finished():
 	# Apply cooking effect to item
-	var items = item_receiver_component.get_items()
+	var items = processor.get_items()
 	if items.size() > 0:
 		var item = items[0]
 		if "modulate" in item:
 			item.modulate = Color(0.6, 0.4, 0.2)  # Brown color
 
+		# Restore original size
+		if "scale" in item:
+			item.scale = Vector2(1.0, 1.0)  # Restore to original size
+
 	animation_component.play("idle")
+
+	# Re-enable oven interactions after processing
+	if interaction_area:
+		interaction_area.set_monitoring(true)
+		interaction_area.set_monitorable(true)
+
 	_update_interaction_text()
 
 
@@ -89,10 +124,9 @@ func _update_interaction_text():
 	if not interaction_area:
 		return
 
-	if item_receiver_component.has_items():
-		if item_processor_component.is_processing:
-			interaction_area.action_name = "cooking..."
-		else:
+	match processor.state:
+		ItemProcessorComponent.State.EMPTY:
+			interaction_area.action_name = "cook"
+		ItemProcessorComponent.State.READY:
 			interaction_area.action_name = "pick up"
-	else:
-		interaction_area.action_name = "cook"
+		# PROCESSING state is handled by disabling interactions completely
