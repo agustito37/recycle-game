@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://c41m6kihaojos"]
+[gd_scene load_steps=18 format=3 uid="uid://c41m6kihaojos"]
 
 [ext_resource type="Texture2D" uid="uid://c5evu42m7jk8k" path="res://art/moderninteriors-win/3_Animated_objects/48x48/spritesheets/animated_chimney_white_door_48x48.png" id="1_iggpt"]
 [ext_resource type="Script" uid="uid://blepb4b32o538" path="res://scripts/oven.gd" id="2_oven"]
