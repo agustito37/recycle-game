@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="recycle"
-run/main_scene="uid://cpfsyair8xnk5"
+run/main_scene="uid://bnnltulb38dr2"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 
@@ -23,7 +23,8 @@ InteractionManager="*res://interaction/interaction_manager.tscn"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
-window/stretch/mode="canvas_items"
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
 window/stretch/scale=1.4
 
 [input]

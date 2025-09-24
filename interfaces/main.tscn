@@ -1,0 +1,98 @@
+[gd_scene load_steps=11 format=3 uid="uid://khrn0y4tbat8"]
+
+[ext_resource type="Texture2D" uid="uid://ducd8kxh4fna8" path="res://art/Complete_UI_Essential_Pack_Free/01_Flat_Theme/Sprites/UI_Flat_Frame03a.png" id="1_nqv3n"]
+[ext_resource type="Script" uid="uid://kvb6ra7u5864" path="res://scripts/main_screen.gd" id="1_qktro"]
+[ext_resource type="Texture2D" uid="uid://dk83vckisd347" path="res://art/Complete_UI_Essential_Pack_Free/01_Flat_Theme/Sprites/UI_Flat_FrameSlot03b.png" id="2_0nryu"]
+[ext_resource type="FontFile" uid="uid://bjn64sfqnfrnq" path="res://fonts/KiriFont.otf" id="2_wfon3"]
+[ext_resource type="Texture2D" uid="uid://bpsso7b3luari" path="res://art/Complete_UI_Essential_Pack_Free/01_Flat_Theme/Sprites/UI_Flat_FrameSlot01a.png" id="3_wfon3"]
+[ext_resource type="Texture2D" uid="uid://edod82485le5" path="res://art/Complete_UI_Essential_Pack_Free/01_Flat_Theme/Sprites/UI_Flat_IconPlay01a.png" id="4_qktro"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wfon3"]
+texture = ExtResource("2_0nryu")
+texture_margin_left = 2.0
+texture_margin_top = 2.0
+texture_margin_right = 2.0
+texture_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qktro"]
+texture = ExtResource("3_wfon3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i55uq"]
+texture = ExtResource("3_wfon3")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wv6qv"]
+texture = ExtResource("3_wfon3")
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qktro")
+
+[node name="Start" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MenuBack" type="MarginContainer" parent="Start"]
+custom_minimum_size = Vector2(500, 320)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Start/MenuBack"]
+layout_mode = 2
+texture = ExtResource("1_nqv3n")
+patch_margin_left = 1
+patch_margin_top = 2
+patch_margin_right = 1
+patch_margin_bottom = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Start/MenuBack/NinePatchRect"]
+layout_mode = 0
+offset_right = 500.0
+offset_bottom = 600.0
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Start/MenuBack/NinePatchRect/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Start/MenuBack/NinePatchRect/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("2_wfon3")
+theme_override_font_sizes/font_size = 40
+text = "RECYCLE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="Start/MenuBack/NinePatchRect/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleBoxTexture_wfon3")
+theme_override_styles/hover = SubResource("StyleBoxTexture_qktro")
+theme_override_styles/disabled = SubResource("StyleBoxTexture_i55uq")
+theme_override_styles/focus = SubResource("StyleBoxTexture_wv6qv")
+text = "
+"
+icon_alignment = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="Start/MenuBack/NinePatchRect/MarginContainer/VBoxContainer/Button"]
+position = Vector2(37, 35)
+scale = Vector2(3, 3)
+texture = ExtResource("4_qktro")
+
+[connection signal="pressed" from="Start/MenuBack/NinePatchRect/MarginContainer/VBoxContainer/Button" to="." method="_on_button_pressed"]
